@@ -1,0 +1,4 @@
+/build
+
+# Use your own, checkout gradle.properties.sample
+gradle.properties

@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "it.fancypixel.whosfancy"
+        minSdkVersion 15
+        targetSdkVersion 20
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "URL_BASE", base_url
+        buildConfigField "String", "USERNAME", username
+        buildConfigField "String", "PASSWORD", password
+        buildConfigField "String", "REGION", region
+        buildConfigField "String", "PROXIMITY_UUID", proximity_uuid
+        buildConfigField "Integer", "MAJOR", major
+        buildConfigField "Integer", "MINOR", minor
+
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v13:20.+'
+}
