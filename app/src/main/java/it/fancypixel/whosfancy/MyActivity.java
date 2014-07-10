@@ -35,7 +35,7 @@ public class MyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        mRegion = new Region(Globals.WHOS_FANCY_REGION, Globals.PROXIMITY_UUID, Globals.MAJOR, Globals.MINOR);
+        mRegion = new Region(Globals.WHOS_FANCY_REGION+"_", Globals.PROXIMITY_UUID, Globals.MAJOR, Globals.MINOR);
 
         // Configure verbose debug logging, enable this to debugging
         // L.enableDebugLogging(true);
