@@ -1,6 +1,4 @@
 base_url="http://your.host/api/v1"
-username="your.username"
-password="your.password"
 region="your region"
 proximity_uuid="your UUID"
 major=your major

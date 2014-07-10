@@ -9,11 +9,54 @@
     android:orientation="vertical"
     tools:context="it.fancypixel.whosfancy.MyActivity">
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding"
+        android:text="@string/email"
+        android:textColor="@color/color_red"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_red"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edittext_red" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="@dimen/default_padding"
+        android:textColor="@color/color_red"
+        android:text="@string/password"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_red"
+        android:inputType="textPassword"
+        android:background="@drawable/edittext_red" />
+
+    <Switch
+        android:id="@+id/service_switch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/check_text"
+        android:textColor="@color/color_red"
+        />
+
     <TextView android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="5dp"
-        android:background="@android:color/holo_orange_dark"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="@dimen/default_padding"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:text="@string/last_post_notification"
         android:textSize="@dimen/text_title_size"/>
@@ -22,8 +65,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@android:color/holo_orange_light"
-        android:textColor="@android:color/black"
+        android:background="@android:color/holo_red_light"
+        android:gravity="center"
+        android:textColor="@android:color/white"
         android:text="@string/none"
         android:textSize="@dimen/text_status_size"/>
 

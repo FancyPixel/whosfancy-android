@@ -3,11 +3,13 @@ package it.fancypixel.whosfancy;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +32,18 @@ public class MyActivity extends Activity {
     private String mStatusText;
     private Region mRegion;
 
+    private SharedPreferences mPreferences;
+
+    private EditText mEmail;
+    private EditText mPassword;
+    private Switch mSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
+        mPreferences = getApplicationContext().getSharedPreferences("preferences", Activity.MODE_PRIVATE);
 
         mRegion = new Region(Globals.WHOS_FANCY_REGION+"_", Globals.PROXIMITY_UUID, Globals.MAJOR, Globals.MINOR);
 
@@ -65,8 +75,23 @@ public class MyActivity extends Activity {
             mStatusText = getIntent().getStringExtra(EXTRA_STATUS_TEXT);
             ((TextView)findViewById(R.id.status)).setText(mStatusText);
         }
-    }
 
+        mEmail = ((EditText)findViewById(R.id.email));
+        mPassword = ((EditText)findViewById(R.id.password));
+        mSwitch = ((Switch)findViewById(R.id.service_switch));
+
+        mEmail.setText(mPreferences.getString(Globals.PREFERENCE_EMAIL, ""));
+        mPassword.setText(mPreferences.getString(Globals.PREFERENCE_PASSWORD, ""));
+
+        mSwitch.setChecked(mPreferences.getBoolean(Globals.PREFERENCE_SERVICE_STARTED, false));
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) startBeaconService();
+                else stopBeaconService();
+            }
+        });
+    }
 
     @Override
     protected void onStart() {
@@ -104,46 +129,15 @@ public class MyActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT) {
             if(resultCode == Activity.RESULT_OK) {
-                if(checkBluetooth()) {
-                    Intent i = new Intent(this, MyService.class);
-                    startService(i);
-                    Toast.makeText(this, getString(R.string.whos_fancy_service_started), Toast.LENGTH_SHORT).show();
-                }
+                startBeaconService();
+                mSwitch.setChecked(true);
             } else {
                 Toast.makeText(this, getString(R.string.bluetooth_not_enabled), Toast.LENGTH_LONG).show();
                 if(getActionBar() != null) getActionBar().setSubtitle(getString(R.string.bluetooth_not_enabled));
+                mSwitch.setChecked(false);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_start) {
-            if(checkBluetooth()) {
-                Intent i = new Intent(this, MyService.class);
-                startService(i);
-                Toast.makeText(this, getString(R.string.whos_fancy_service_started), Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-        else if (id == R.id.action_stop) {
-            Intent i = new Intent(this, MyService.class);
-            stopService(i);
-            Toast.makeText(this, getString(R.string.whos_fancy_service_stopped), Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private boolean checkBluetooth() {
@@ -161,5 +155,40 @@ public class MyActivity extends Activity {
             return true;
         }
         return false;
+    }
+
+    private boolean checkCredentials() {
+        boolean res = true;
+        if(mEmail.getText().length() == 0) {
+            mEmail.setError(getString(R.string.error_email));
+            res = false;
+        }
+        if(mPassword.getText().length() == 0) {
+            mPassword.setError(getString(R.string.error_password));
+            res = false;
+        }
+
+        return res;
+    }
+
+    private void startBeaconService() {
+        if (checkCredentials() && checkBluetooth()) {
+            startService(new Intent(MyActivity.this, MyService.class));
+            SharedPreferences.Editor editor = mPreferences.edit();
+            editor.putBoolean(Globals.PREFERENCE_SERVICE_STARTED, true);
+            editor.putString(Globals.PREFERENCE_EMAIL, mEmail.getText().toString());
+            editor.putString(Globals.PREFERENCE_PASSWORD, mPassword.getText().toString());
+            editor.commit();
+            Toast.makeText(MyActivity.this, getString(R.string.whos_fancy_service_started), Toast.LENGTH_SHORT).show();
+        }
+        else mSwitch.setChecked(false);
+    }
+
+    private void stopBeaconService() {
+        stopService(new Intent(MyActivity.this, MyService.class));
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(Globals.PREFERENCE_SERVICE_STARTED, false);
+        editor.commit();
+        Toast.makeText(MyActivity.this, getString(R.string.whos_fancy_service_stopped), Toast.LENGTH_SHORT).show();
     }
 }

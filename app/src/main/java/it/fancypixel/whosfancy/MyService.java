@@ -1,11 +1,13 @@
 package it.fancypixel.whosfancy;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -46,6 +48,7 @@ public class MyService extends Service {
     private BeaconManager mBeaconManager;
     private NotificationManager mNotificationManager;
     private Region mRegion;
+    private SharedPreferences mPreferences;
 
     public MyService() {
     }
@@ -56,6 +59,8 @@ public class MyService extends Service {
         // L.enableDebugLogging(true);
 
         mRegion = new Region(Globals.WHOS_FANCY_REGION, Globals.PROXIMITY_UUID, Globals.MAJOR, Globals.MINOR);
+
+        mPreferences = getApplicationContext().getSharedPreferences("preferences", Activity.MODE_PRIVATE);
 
         // User this to receive notification from all iBeacons
         //mRegion = new Region(Globals.WHOS_FANCY_REGION, PROXIMITY_UUID, null, null);
@@ -116,6 +121,9 @@ public class MyService extends Service {
         super.onDestroy();
         mNotificationManager.cancel(WHOS_FANCY_NOTIFICATION_ID);
         mBeaconManager.disconnect();
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(Globals.PREFERENCE_SERVICE_STARTED, false);
+        editor.commit();
     }
 
     @Override
@@ -175,7 +183,8 @@ public class MyService extends Service {
         HttpContext localContext = new BasicHttpContext();
         HttpPost httpPost = new HttpPost(Uri.parse(url).buildUpon().toString());
 
-        String credentials = Globals.USERNAME + ":" + Globals.PASSWORD;
+        String credentials = mPreferences.getString(Globals.PREFERENCE_EMAIL, "") + ":" +
+                             mPreferences.getString(Globals.PREFERENCE_PASSWORD, "");
         String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         httpPost.addHeader("Authorization", "Basic " + base64EncodedCredentials);
 

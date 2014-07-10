@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Who\'s Fancy</string>
+    <string name="app_name">Who\'s Fancy?</string>
     <string name="action_start">start</string>
     <string name="action_stop">stop</string>
     <string name="action_settings">settings</string>
@@ -14,5 +14,10 @@
     <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
     <string name="whos_fancy_service_started">Who\'s Fancy service started</string>
     <string name="whos_fancy_service_stopped">Who\'s Fancy service stopped</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="check_text">check me in and out</string>
+    <string name="error_email">insert an email</string>
+    <string name="error_password">insert a password</string>
 
 </resources>

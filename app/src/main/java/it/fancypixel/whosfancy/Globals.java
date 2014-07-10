@@ -14,17 +14,13 @@ public class Globals {
      * Global configuration
      */
     public static final String WHOS_FANCY_REGION = BuildConfig.REGION;
-
-    public static final String USERNAME = BuildConfig.USERNAME;
-
-    public static final String PASSWORD = BuildConfig.PASSWORD;
-
     public static final String PROXIMITY_UUID = BuildConfig.PROXIMITY_UUID;
-
     public static final Integer MAJOR = BuildConfig.MAJOR;
-
     public static final Integer MINOR = BuildConfig.MINOR;
 
+    public static final String PREFERENCE_SERVICE_STARTED = "service_stared";
+    public static final String PREFERENCE_EMAIL = "email";
+    public static final String PREFERENCE_PASSWORD = "password";
 
     /*
      * URL configuration

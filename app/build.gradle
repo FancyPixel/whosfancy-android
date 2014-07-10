@@ -12,8 +12,6 @@ android {
         versionName "1.0"
 
         buildConfigField "String", "URL_BASE", base_url
-        buildConfigField "String", "USERNAME", username
-        buildConfigField "String", "PASSWORD", password
         buildConfigField "String", "REGION", region
         buildConfigField "String", "PROXIMITY_UUID", proximity_uuid
         buildConfigField "Integer", "MAJOR", major
